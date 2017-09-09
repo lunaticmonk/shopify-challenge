@@ -3,22 +3,18 @@
 const request = require('request');
 let invalidCustomers = [];
 
-request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=2', function(error, res, body) {
+request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=3', function(error, res, body) {
   if (error) {
     console.log('Error: ', error);
   }
   let data = JSON.parse(body);
   let validations = data.validations;
   let customers = data.customers;
-
   let requiredValidations = [];
-
-
 
   validations.forEach(validation => {
     Object.keys(validation).map(validationKey => {
-      console.log(validation[validationKey].required);
-      if (validation[validationKey].required) {
+      if (validation[validationKey].required || validation[validationKey]['length']) {
         requiredValidations.push(validationKey);
       }
     });
@@ -27,7 +23,7 @@ request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?
   customers.forEach(customer => {
     let invalidValidationPerUser = [];
     requiredValidations.forEach(validationKey => {
-      if (!customer[validationKey]) {
+      if (customer[validationKey] === null) {
         invalidValidationPerUser.push(validationKey);
       }
     });
@@ -37,6 +33,8 @@ request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?
       });
     }
   });
-  console.log(requiredValidations);
   console.log(invalidCustomers);
+  // console.log({
+  //   "invalid_customers": invalidCustomers
+  // });
 });
