@@ -1,9 +1,10 @@
 'use strict';
 
+const util = require('util');
 const request = require('request');
-let invalidCustomers = [];
+const invalidCustomers = [];
 
-request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=1', function(error, res, body) {
+request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=3', function(error, res, body) {
   if (error) {
     console.log('Error: ', error);
   }
@@ -33,16 +34,9 @@ request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?
       }
       if (customer[validation.key] && (validation.minLength || validation.maxLength) && validation.type === typeof(customer[validation.key])) {
         let customerKeyLength = customer[validation.key].split('').length;
-        if (!(customerKeyLength > validation.minLength || customerKeyLength <= validation.maxLength)) {
+        if (!(customerKeyLength >= validation.minLength || customerKeyLength < validation.maxLength)) {
           invalidValidationPerUser.push(validation.key);
         }
-        // if (!((customerKeyLength >= validation.minLength && customerKeyLength < validation.maxLength) || (customerKeyLength > validation.minLength) || (customerKeyLength < validation.maxLength))) {
-        //   console.log((customerKeyLength >= validation.minLength && customerKeyLength < validation.maxLength));
-        //   console.log(customerKeyLength, validation.minLength, validation.maxLength);
-        //   // console.log(customer[validation.key].split('').length);
-        //   // console.log(validation.minLength, validation.maxLength);
-        //   invalidValidationPerUser.push(validation.key);
-        // }
       }
     });
     if (invalidValidationPerUser.length) {
@@ -51,8 +45,8 @@ request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?
       });
     }
   });
-  console.log(invalidCustomers);
-  // console.log({
-  //   "invalid_customers": invalidCustomers
-  // });
+
+  console.log(JSON.stringify({
+    "invalid_customers": invalidCustomers
+  }, null, 2));
 });
