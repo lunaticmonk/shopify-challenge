@@ -3,8 +3,10 @@
 const util = require('util');
 const request = require('request');
 const invalidCustomers = [];
+const requestUrl = `https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=${process.argv[2] ? process.argv[2] : '1'}`;
 
-request.get(`https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=${process.argv[2] ? process.argv[2] : '1'}`, function(error, res, body) {
+request.get(requestUrl, function(error, res, body) {
+  console.log('Endpoint used: ', requestUrl, '\n');
   if (error) {
     console.log('Error: ', error);
   }
@@ -46,7 +48,7 @@ request.get(`https://backend-challenge-winter-2017.herokuapp.com/customers.json?
     }
   });
 
-  console.log(JSON.stringify({
+  console.log('Required Invalid Customers: \n\n', JSON.stringify({
     "invalid_customers": invalidCustomers
   }, null, 2));
 });
