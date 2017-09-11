@@ -4,7 +4,7 @@ const util = require('util');
 const request = require('request');
 const invalidCustomers = [];
 
-request.get('https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=3', function(error, res, body) {
+request.get(`https://backend-challenge-winter-2017.herokuapp.com/customers.json?page=${process.argv[2] ? process.argv[2] : '1'}`, function(error, res, body) {
   if (error) {
     console.log('Error: ', error);
   }
